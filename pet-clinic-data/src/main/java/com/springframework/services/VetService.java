@@ -1,10 +1,10 @@
 package com.springframework.services;
 
-import com.springframework.model.Pet;
+import com.springframework.model.Vet;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Set;
 
-public interface PetService extends CrudRepository<Pet, Long>  {
+public interface VetService extends CrudRepository<Vet, Long> {
 
 }

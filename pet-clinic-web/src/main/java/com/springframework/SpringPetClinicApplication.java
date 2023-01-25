@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import static org.springframework.boot.SpringApplication.run;
 
 
-@SpringBootApplication()
+@SpringBootApplication
 public class SpringPetClinicApplication {
 
 	public static void main(String[] args) {

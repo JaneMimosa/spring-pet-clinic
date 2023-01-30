@@ -1,11 +1,7 @@
 package com.springframework.bootstrap;
 
-import com.springframework.model.Owner;
-import com.springframework.model.Vet;
-import com.springframework.services.OwnerService;
-import com.springframework.services.VetService;
-import com.springframework.services.map.OwnerServiceMap;
-import com.springframework.services.map.VetServiceMap;
+import com.springframework.model.*;
+import com.springframework.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

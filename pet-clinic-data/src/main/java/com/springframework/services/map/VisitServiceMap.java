@@ -2,9 +2,13 @@ package com.springframework.services.map;
 
 import com.springframework.model.Visit;
 import com.springframework.services.VisitService;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+@Service
+@Profile({"default", "map"})
 public class VisitServiceMap extends AbstractMapService<Visit, Long> implements VisitService {
 
     @Override

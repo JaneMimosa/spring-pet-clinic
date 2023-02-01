@@ -2,11 +2,13 @@ package com.springframework.services.map;
 
 import com.springframework.model.Speciality;
 import com.springframework.services.SpecialtiesService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
+@Profile({"default", "map"})
 public class SpecialtiesServiceMap extends AbstractMapService<Speciality, Long> implements SpecialtiesService {
     @Override
     public Set<Speciality> findAll() {

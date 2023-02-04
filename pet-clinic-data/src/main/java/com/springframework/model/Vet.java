@@ -1,12 +1,18 @@
 package com.springframework.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "vets")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Vet extends Person{
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -14,11 +20,4 @@ public class Vet extends Person{
             inverseJoinColumns = @JoinColumn(name = "specialty_id"))
     private Set<Speciality> specialities = new HashSet<>();
 
-    public Set<Speciality> getSpecialities() {
-        return specialities;
-    }
-
-    public void setSpecialities(Set<Speciality> specialities) {
-        this.specialities = specialities;
-    }
 }

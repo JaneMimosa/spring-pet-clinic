@@ -6,8 +6,8 @@ import lombok.*;
 @MappedSuperclass
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Person extends BaseEntity{
 
     private String firstName;

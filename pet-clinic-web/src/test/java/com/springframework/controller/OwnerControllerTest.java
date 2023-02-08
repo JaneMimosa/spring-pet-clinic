@@ -5,6 +5,7 @@ import com.springframework.services.OwnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,6 +36,7 @@ class OwnerControllerTest {
     Set<Owner> owners;
 
     MockMvc mockMvc;
+
     @BeforeEach
     void setUp() {
         owners = new HashSet<>();
@@ -81,5 +83,52 @@ class OwnerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("owners/ownerDetails"))
                 .andExpect(model().attribute("owner", hasProperty("id", is(1L))));
+    }
+
+    @Test
+    void initCreationForm() throws Exception {
+        mockMvc.perform(get("/owners/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/createOrUpdateOwnerForm"))
+                .andExpect(model().attributeExists("owner"));
+    }
+
+
+    //todo work in practice but not in test
+    @Test
+    void processCreationForm() throws Exception {
+        when(ownerService.save(ArgumentMatchers.any())).thenReturn(Owner.builder().id(1L).build());
+
+        mockMvc.perform(get("/owners/new"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/1"))
+                .andExpect(model().attributeExists("owner"));
+
+        verify(ownerService).save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void initUpdateForm() throws Exception {
+        when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1L).build());
+
+        mockMvc.perform(get("/owners/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/createOrUpdateOwnerForm"))
+                .andExpect(model().attributeExists("owner"));
+
+        verifyNoMoreInteractions(ownerService);
+    }
+
+    //todo work in practice but not in test
+    @Test
+    void processUpdateForm() throws Exception {
+        when(ownerService.save(ArgumentMatchers.any())).thenReturn(Owner.builder().id(1L).build());
+
+        mockMvc.perform(get("/owners/1/edit"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:owners/1"))
+                .andExpect(model().attributeExists("owner"));
+
+        verify(ownerService).save(ArgumentMatchers.any());
     }
 }

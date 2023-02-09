@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class Visit extends BaseEntity{
+
     private LocalDate date;
     private String description;
     @ManyToOne

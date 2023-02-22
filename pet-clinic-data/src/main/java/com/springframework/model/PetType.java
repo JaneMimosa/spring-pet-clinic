@@ -2,6 +2,7 @@ package com.springframework.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Entity
@@ -11,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PetType extends BaseEntity {
+    @NotEmpty
     private String name;
 
     @Builder

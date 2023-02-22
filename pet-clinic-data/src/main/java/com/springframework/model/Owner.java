@@ -4,6 +4,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.HashSet;
@@ -31,8 +33,13 @@ public class Owner extends Person{
     }
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private Set<Pet> pets = new HashSet<>();
+
+    @NotEmpty
     private String address;
+    @NotEmpty
     private String city;
+    @NotEmpty
+    @Digits(fraction = 0, integer = 10)
     private String telephone;
 
     public Pet getPet(String name) {

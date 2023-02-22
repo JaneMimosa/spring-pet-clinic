@@ -1,7 +1,12 @@
 package com.springframework.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -14,7 +19,9 @@ import java.time.LocalDate;
 @Builder
 public class Visit extends BaseEntity{
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
+    @NotEmpty
     private String description;
     @ManyToOne
     @JoinColumn(name = "pet_id")

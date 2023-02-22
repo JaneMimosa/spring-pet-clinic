@@ -1,6 +1,7 @@
 package com.springframework.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class Pet extends BaseEntity{
 
+    @NotEmpty
     private String name;
 
     @ManyToOne

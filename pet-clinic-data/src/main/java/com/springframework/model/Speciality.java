@@ -2,8 +2,9 @@ package com.springframework.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "specialties")

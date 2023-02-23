@@ -3,6 +3,7 @@ package com.springframework.controller;
 import com.springframework.model.Owner;
 import com.springframework.model.Pet;
 import com.springframework.model.PetType;
+import com.springframework.repositories.OwnerRepository;
 import com.springframework.services.OwnerService;
 import com.springframework.services.PetService;
 import com.springframework.services.PetTypeService;
@@ -25,11 +26,14 @@ public class PetController {
     private final PetService petService;
     private final OwnerService ownerService;
     private final PetTypeService petTypeService;
+    private final OwnerRepository ownerRepository;
 
-    public PetController(PetService petService, OwnerService ownerService, PetTypeService petTypeService) {
+    public PetController(PetService petService, OwnerService ownerService, PetTypeService petTypeService,
+                         OwnerRepository ownerRepository) {
         this.petService = petService;
         this.ownerService = ownerService;
         this.petTypeService = petTypeService;
+        this.ownerRepository = ownerRepository;
     }
 
     @ModelAttribute("types")
@@ -61,7 +65,8 @@ public class PetController {
         if(StringUtils.hasLength(pet.getName()) && pet.isNew() && (owner.getPet(pet.getName(), true) != null)){
             result.rejectValue("name", "duplicate", "already exists");
         }
-        owner.getPets().add(pet);
+        pet.setOwner(owner);
+        owner.addPet(pet);
         if(result.hasErrors()) {
             model.addAttribute("pet", pet);
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
@@ -84,9 +89,9 @@ public class PetController {
             model.addAttribute("pet", pet);
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
         } else {
-           owner.getPets().add(pet);
+           pet.setOwner(owner);
            petService.save(pet);
-            return "redirect:/owners/" + owner.getId();
+           return "redirect:/owners/" + owner.getId();
         }
     }
 }

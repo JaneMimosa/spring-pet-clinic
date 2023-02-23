@@ -29,7 +29,7 @@ public class Pet extends BaseEntity{
     private Owner owner;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "pet")
     private Set<Visit> visits = new HashSet<>();
 
     @Builder

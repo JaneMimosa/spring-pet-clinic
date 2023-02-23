@@ -1,9 +1,6 @@
 package com.springframework.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import javax.validation.constraints.Digits;
@@ -31,7 +28,7 @@ public class Owner extends Person{
             this.pets = pets;
         }
     }
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,mappedBy = "owner")
     private Set<Pet> pets = new HashSet<>();
 
     @NotEmpty
@@ -44,6 +41,12 @@ public class Owner extends Person{
 
     public Pet getPet(String name) {
         return getPet(name, false);
+    }
+
+    public void addPet(Pet pet) {
+        if (pet.isNew()) {
+            getPets().add(pet);
+        }
     }
 
     public Pet getPet(String name, boolean ignoreNew){

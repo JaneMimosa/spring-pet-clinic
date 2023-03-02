@@ -1,5 +1,6 @@
 package com.springframework.services.springdatajpa;
 
+import com.springframework.exceptions.NotFoundException;
 import com.springframework.model.Owner;
 import com.springframework.repositories.OwnerRepository;
 import com.springframework.services.OwnerService;
@@ -29,7 +30,7 @@ public class OwnerSDJpaService implements OwnerService {
 
     @Override
     public Owner findById(Long id) {
-        return ownerRepository.findById(id).orElse(null);
+        return ownerRepository.findById(id).orElseThrow(() -> new NotFoundException("Owner with ID " + id + " Not Found"));
     }
     @Override
     public Owner findByLastName(String lastName) {

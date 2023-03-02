@@ -55,11 +55,11 @@ public class OwnerController {
 
     @GetMapping("/{ownerId}")
     public String showOwner(@PathVariable Long ownerId, Model model) {
-        if(ownerService.findById(ownerId) == null) {
+        Owner owner = ownerService.findById(ownerId);
+        if( owner == null) {
             throw new NotFoundException("Owner Not Found");
-        } else {
-            model.addAttribute("owner", ownerService.findById(ownerId));
         }
+        model.addAttribute("owner", owner);
         return "owners/ownerDetails";
     }
 
@@ -95,5 +95,4 @@ public class OwnerController {
             return "redirect:/owners/" + owner.getId();
         }
     }
-
 }

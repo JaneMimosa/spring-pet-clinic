@@ -57,7 +57,7 @@ public class OwnerController {
     public String showOwner(@PathVariable Long ownerId, Model model) {
         Owner owner = ownerService.findById(ownerId);
         if( owner == null) {
-            throw new NotFoundException("Owner with ID" + ownerId  + " Not Found");
+            throw new NotFoundException("Owner with ID " + ownerId  + " Not Found");
         }
         model.addAttribute("owner", owner);
         return "owners/ownerDetails";

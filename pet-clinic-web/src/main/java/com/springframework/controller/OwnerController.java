@@ -1,5 +1,6 @@
 package com.springframework.controller;
 
+import com.springframework.exceptions.NotFoundException;
 import com.springframework.model.Owner;
 import com.springframework.services.OwnerService;
 import org.springframework.stereotype.Controller;
@@ -54,7 +55,11 @@ public class OwnerController {
 
     @GetMapping("/{ownerId}")
     public String showOwner(@PathVariable Long ownerId, Model model) {
-        model.addAttribute("owner", ownerService.findById(ownerId));
+        if(ownerService.findById(ownerId) == null) {
+            throw new NotFoundException("Owner Not Found");
+        } else {
+            model.addAttribute("owner", ownerService.findById(ownerId));
+        }
         return "owners/ownerDetails";
     }
 
@@ -65,7 +70,7 @@ public class OwnerController {
     }
 
     @PostMapping("/new")
-    public String processCreationForm(@Valid Owner owner, BindingResult result) {
+    public String processCreationForm(@Valid @ModelAttribute Owner owner, BindingResult result) {
         if(result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
@@ -81,7 +86,7 @@ public class OwnerController {
     }
 
     @PostMapping("/{ownerId}/edit")
-    public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable Long ownerId) {
+    public String processUpdateOwnerForm(@Valid @ModelAttribute Owner owner, BindingResult result, @PathVariable Long ownerId) {
         if(result.hasErrors()){
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {

@@ -1,5 +1,6 @@
 package com.springframework.controller;
 
+import com.springframework.exceptions.NotFoundException;
 import com.springframework.model.Owner;
 import com.springframework.services.OwnerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,13 +36,15 @@ class OwnerControllerTest {
     OwnerController ownerController;
 
     Set<Owner> owners;
+    Owner owner;
 
     MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         owners = new HashSet<>();
-        owners.add(Owner.builder().id(1L).build());
+        owner = Owner.builder().id(1L).build();
+        owners.add(owner);
         owners.add(Owner.builder().id(2L).build());
 
         mockMvc = MockMvcBuilders
@@ -85,6 +89,14 @@ class OwnerControllerTest {
                 .andExpect(model().attribute("owner", hasProperty("id", is(1L))));
     }
 
+    @Test()
+    void ownerNotFound() throws Exception {
+        when(ownerService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/owners/1"))
+                .andExpect(status().isNotFound());
+    }
+
     @Test
     void initCreationForm() throws Exception {
         mockMvc.perform(get("/owners/new"))
@@ -94,12 +106,12 @@ class OwnerControllerTest {
     }
 
 
-    //todo work in practice but not in test
+    //todo View name expected:<redirect:/owners/1> but was:<redirect:/owners/null>
     @Test
     void processCreationForm() throws Exception {
-        when(ownerService.save(ArgumentMatchers.any())).thenReturn(Owner.builder().id(1L).build());
+        when(ownerService.save(ArgumentMatchers.any())).thenReturn(owner);
 
-        mockMvc.perform(get("/owners/new"))
+        mockMvc.perform(post("/owners/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/1"))
                 .andExpect(model().attributeExists("owner"));
@@ -119,16 +131,29 @@ class OwnerControllerTest {
         verifyNoMoreInteractions(ownerService);
     }
 
-    //todo work in practice but not in test
     @Test
     void processUpdateForm() throws Exception {
-        when(ownerService.save(ArgumentMatchers.any())).thenReturn(Owner.builder().id(1L).build());
+        when(ownerService.save(ArgumentMatchers.any())).thenReturn(owner);
 
-        mockMvc.perform(get("/owners/1/edit"))
+        mockMvc.perform(post("/owners/1/edit"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:owners/1"))
-                .andExpect(model().attributeExists("owner"));
+                .andExpect(view().name("redirect:/owners/1"))
+                //todo java.lang.AssertionError: Model attribute 'owner' does not exist
+                .andExpect(model().attributeExists("owner"))
+        ;
 
         verify(ownerService).save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void processFindFormEmptyReturnMany() throws Exception {
+        when(ownerService.findAllByLastNameLike(anyString()))
+                .thenReturn(Arrays.asList(Owner.builder().id(1L).build(),
+                Owner.builder().id(2L).build()));
+
+        mockMvc.perform(get("/owners").param("lastName", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(2)));
     }
 }

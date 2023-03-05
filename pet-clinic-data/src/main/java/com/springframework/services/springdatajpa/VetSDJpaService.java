@@ -1,5 +1,6 @@
 package com.springframework.services.springdatajpa;
 
+import com.springframework.exceptions.NotFoundException;
 import com.springframework.model.Vet;
 import com.springframework.repositories.VetRepository;
 import com.springframework.services.VetService;
@@ -28,7 +29,7 @@ public class VetSDJpaService implements VetService {
 
     @Override
     public Vet findById(Long id) {
-        return vetRepository.findById(id).orElse(null);
+        return vetRepository.findById(id).orElseThrow(() -> new NotFoundException("Vet with ID " + id + " Not Found"));
     }
 
     @Override

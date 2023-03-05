@@ -1,5 +1,6 @@
 package com.springframework.services.springdatajpa;
 
+import com.springframework.exceptions.NotFoundException;
 import com.springframework.model.Speciality;
 import com.springframework.repositories.SpecialtyRepository;
 import com.springframework.services.SpecialtiesService;
@@ -27,7 +28,7 @@ public class SpecialtySDJpaService implements SpecialtiesService {
 
     @Override
     public Speciality findById(Long id) {
-        return specialtyRepository.findById(id).orElse(null);
+        return specialtyRepository.findById(id).orElseThrow(() -> new NotFoundException("Speciality with ID " + id + " Not Found"));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.springframework.services.springdatajpa;
 
+import com.springframework.exceptions.NotFoundException;
 import com.springframework.model.Visit;
 import com.springframework.repositories.VisitRepository;
 import com.springframework.services.VisitService;
@@ -28,7 +29,7 @@ public class VisitSDJpaService implements VisitService {
 
     @Override
     public Visit findById(Long id) {
-        return visitRepository.findById(id).orElse(null);
+        return visitRepository.findById(id).orElseThrow(() -> new NotFoundException("Visit with ID " + id + " Not Found"));
     }
 
     @Override
